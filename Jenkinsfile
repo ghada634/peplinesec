@@ -40,7 +40,6 @@ pipeline {
             steps {
                 script {
                     try {
-                        // Ensure Docker Compose is available and the Docker Compose file is present
                         bat 'docker-compose -f docker-compose.yml up -d --build'
                     } catch (Exception e) {
                         echo "Erreur lors du lancement de Docker Compose : ${e.getMessage()}"
@@ -85,12 +84,17 @@ pipeline {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ghada-key', keyFileVariable: 'SSH_KEY_FILE')]) {
                     script {
-                        // Fix file permissions
                         bat 'icacls %SSH_KEY_FILE% /inheritance:r'
                         bat 'icacls %SSH_KEY_FILE% /grant:r "test:F"'
 
-                        // Now SSH
-                        bat 'ssh -i %SSH_KEY_FILE% -o StrictHostKeyChecking=no ubuntu@3.84.219.170 "docker pull ghada522/edoc-app:latest && docker stop app || true && docker rm app || true && docker run -d --name app -p 80:80 ghada522/edoc-app:latest"'
+                        bat '''
+                        ssh -i %SSH_KEY_FILE% -o StrictHostKeyChecking=no ubuntu@3.84.219.170 ^
+                        "cd ~/peplinesec && \
+                        docker-compose down && \
+                        git pull && \
+                        docker-compose pull && \
+                        docker-compose up -d"
+                        '''
                     }
                 }
             }
