@@ -10,7 +10,7 @@ pipeline {
     stages {
         stage('Cloner le code') {
             steps {
-                git url: 'https://github.com/ghada634/testprojet.git'
+                git url: 'https://github.com/ghada634/peplinesec.git'
             }
         }
 
