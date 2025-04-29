@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="C:\Users\Mahran\test\tests" tests="5" assertions="10" errors="0" warnings="0" failures="0" skipped="0" time="0.298791">
+    <testsuite name="ConnectionTest" file="C:\Users\Mahran\test\tests\ConnectionTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.010370">
+      <testcase name="testDatabaseConnection" class="ConnectionTest" classname="ConnectionTest" file="C:\Users\Mahran\test\tests\ConnectionTest.php" line="9" assertions="1" time="0.010370">
+        <system-out>Connexion réussie à la base de données.</system-out>
+      </testcase>
+    </testsuite>
+    <testsuite name="SimpleTest" file="C:\Users\Mahran\test\tests\SimpleTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.000118">
+      <testcase name="testTrue" class="SimpleTest" classname="SimpleTest" file="C:\Users\Mahran\test\tests\SimpleTest.php" line="7" assertions="1" time="0.000118"/>
+    </testsuite>
+    <testsuite name="UserTest" file="C:\Users\Mahran\test\tests\UserTest.php" tests="3" assertions="8" errors="0" warnings="0" failures="0" skipped="0" time="0.288302">
+      <testcase name="testAddUser" class="UserTest" classname="UserTest" file="C:\Users\Mahran\test\tests\UserTest.php" line="21" assertions="3" time="0.058854"/>
+      <testcase name="testUserExists" class="UserTest" classname="UserTest" file="C:\Users\Mahran\test\tests\UserTest.php" line="34" assertions="2" time="0.058548"/>
+      <testcase name="testAuthenticateUser" class="UserTest" classname="UserTest" file="C:\Users\Mahran\test\tests\UserTest.php" line="47" assertions="3" time="0.170900"/>
+    </testsuite>
+  </testsuite>
+</testsuites>

@@ -1,3 +1,24 @@
+<?php
+ob_start();
+session_start();
+
+if (isset($_SESSION["user"])) {
+    if (($_SESSION["user"]) == "" || $_SESSION['usertype'] != 'a') {
+        header("location: ../login.php");
+        exit();
+    } else {
+        $useremail = $_SESSION["user"];
+    }
+} else {
+    header("location: ../login.php");
+    exit();
+}
+
+// import database
+include("../connection.php");
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,30 +40,7 @@
 </style>
 </head>
 <body>
-    <?php
 
-    //learn from w3schools.com
-
-    session_start();
-
-    if(isset($_SESSION["user"])){
-        if(($_SESSION["user"])=="" or $_SESSION['usertype']!='a'){
-            //header("location: ../login.php");
-        }else{
-            $useremail=$_SESSION["user"];
-        }
-
-    }else{
-        header("location: ../login.php");
-    }
-    
-    
-
-    //import database
-    include("../connection.php");
-
-    
-    ?>
     <div class="container">
         <div class="menu">
             <table class="menu-container" border="0">

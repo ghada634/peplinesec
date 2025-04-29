@@ -1,7 +1,7 @@
 <?php
 $servername = "db";
-$username = "root";  
-$password = ""; 
+$username = "edocuser";  
+$password = "edocpassword"; 
 $dbname = "edoc"; 
 
 $database = new mysqli($servername, $username, $password, $dbname);
@@ -9,5 +9,5 @@ $database = new mysqli($servername, $username, $password, $dbname);
 if ($database->connect_error) {
     die("Échec de la connexion : " . $database->connect_error);
 }
-?>
+
 
