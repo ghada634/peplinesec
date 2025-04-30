@@ -80,18 +80,20 @@ pipeline {
             }
         }
 
-        stage('Deploy on AWS') {
+        stage('Deploy to AWS') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ghada-key', keyFileVariable: 'SSH_KEY_FILE')]) {
                     script {
                         bat 'icacls %SSH_KEY_FILE% /inheritance:r'
                         bat 'icacls %SSH_KEY_FILE% /grant:r "test:F"'
-                        bat '''ssh -i %SSH_KEY_FILE% -o StrictHostKeyChecking=no ubuntu@3.84.219.170 ^
-                                "cd ~/peplinesec && \
-                                docker-compose down && \
-                                git pull && \
-                                docker-compose pull && \
-                                docker-compose up -d"
+
+                        bat '''
+                        ssh -i %SSH_KEY_FILE% -o StrictHostKeyChecking=no ubuntu@3.84.219.170 ^
+                        "cd ~/peplinesec && \
+                        docker-compose down && \
+                        git pull && \
+                        docker-compose pull && \
+                        docker-compose up -d"
                         '''
                     }
                 }
@@ -99,40 +101,25 @@ pipeline {
         }
     }
 
-   post {
-    success {
-        mail(
-            to: RECIPIENTS,
-            subject: "SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            body: """
-                <html>
-                    <body>
-                        <p>Hello Ghada,</p>
-                        <p>The build <strong>succeeded</strong>.</p>
-                        <p>Check the details here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    </body>
-                </html>
-            """,
-            mimeType: 'text/html',
-            charset: 'UTF-8'
-        )
-    }
+    post {
+        success {
+            mail(
+                to: RECIPIENTS,
+                subject: "SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Hello Ghada,\n\nThe build was successful. Check the details here: ${env.BUILD_URL}",
+                mimeType: 'text/plain',
+                charset: 'UTF-8'
+            )
+        }
 
-    failure {
-        mail(
-            to: RECIPIENTS,
-            subject: "FAILURE - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-            body: """
-                <html>
-                    <body>
-                        <p>Hello Ghada,</p>
-                        <p>The build <strong>failed</strong>.</p>
-                        <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                    </body>
-                </html>
-            """,
-            mimeType: 'text/html',
-            charset: 'UTF-8'
-        )
+        failure {
+            mail(
+                to: RECIPIENTS,
+                subject: "❌ FAILURE - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                body: "Hello Ghada ,\n\nThe build failed !\n\nCheck the logs here: ${env.BUILD_URL}",
+                mimeType: 'text/plain',
+                charset: 'UTF-8'
+            )
+        }
     }
 }
