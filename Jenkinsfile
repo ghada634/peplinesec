@@ -86,13 +86,12 @@ pipeline {
                     script {
                         bat 'icacls %SSH_KEY_FILE% /inheritance:r'
                         bat 'icacls %SSH_KEY_FILE% /grant:r "test:F"'
-                        bat '''
-                            ssh -i %SSH_KEY_FILE% -o StrictHostKeyChecking=no ubuntu@3.84.219.170 ^
-                            "cd ~/peplinesec && \
-                            docker-compose down && \
-                            git pull && \
-                            docker-compose pull && \
-                            docker-compose up -d"
+                        bat '''ssh -i %SSH_KEY_FILE% -o StrictHostKeyChecking=no ubuntu@3.84.219.170 ^
+                                "cd ~/peplinesec && \
+                                docker-compose down && \
+                                git pull && \
+                                docker-compose pull && \
+                                docker-compose up -d"
                         '''
                     }
                 }
