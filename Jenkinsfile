@@ -8,19 +8,19 @@ pipeline {
     }
 
     stages {
-        stage('Cloner le code') {
+        stage('Clone the code') {
             steps {
                 git url: 'https://github.com/ghada634/peplinesec.git'
             }
         }
 
-        stage('Exécuter les tests') {
+        stage('Run tests') {
             steps {
                 bat '.\\vendor\\bin\\phpunit tests'
             }
         }
 
-        stage('Analyse SonarQube') {
+        stage('SonarQube analysis') {
             steps {
                 script {
                     try {
@@ -28,7 +28,7 @@ pipeline {
                             bat 'sonar-scanner -Dsonar.projectKey=testprojet -Dsonar.sources=. -Dsonar.php.tests.reportPath=tests'
                         }
                     } catch (Exception e) {
-                        echo "SonarQube analysis error: ${e.getMessage()}"
+                        echo "Error during SonarQube analysis: ${e.getMessage()}"
                         currentBuild.result = 'FAILURE'
                         throw e
                     }
@@ -36,13 +36,13 @@ pipeline {
             }
         }
 
-        stage('Construire et Lancer Docker Compose') {
+        stage('Build and Run Docker Compose') {
             steps {
                 script {
                     try {
                         bat 'docker-compose -f docker-compose.yml up -d --build'
                     } catch (Exception e) {
-                        echo "Docker Compose launch error: ${e.getMessage()}"
+                        echo "Error during Docker Compose launch: ${e.getMessage()}"
                         currentBuild.result = 'FAILURE'
                         throw e
                     }
@@ -50,13 +50,13 @@ pipeline {
             }
         }
 
-        stage('Scan Trivy pour vulnérabilités Docker') {
+        stage('Trivy scan for Docker vulnerabilities') {
             steps {
                 script {
                     try {
                         bat 'trivy image edoc-app'
                     } catch (Exception e) {
-                        echo "Trivy scan error: ${e.getMessage()}"
+                        echo "Error during Trivy scan: ${e.getMessage()}"
                         currentBuild.result = 'FAILURE'
                         throw e
                     }
@@ -64,7 +64,7 @@ pipeline {
             }
         }
 
-        stage('Pusher l\'image Docker vers Docker Hub') {
+        stage('Push Docker image to Docker Hub') {
             steps {
                 script {
                     try {
@@ -72,7 +72,7 @@ pipeline {
                         bat "docker tag edoc-app ${DOCKER_USERNAME}/edoc-app:latest"
                         bat "docker push ${DOCKER_USERNAME}/edoc-app:latest"
                     } catch (Exception e) {
-                        echo "Docker image push error: ${e.getMessage()}"
+                        echo "Error during Docker image push: ${e.getMessage()}"
                         currentBuild.result = 'FAILURE'
                         throw e
                     }
@@ -80,7 +80,7 @@ pipeline {
             }
         }
 
-        stage('Déployer sur AWS') {
+        stage('Deploy on AWS') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ghada-key', keyFileVariable: 'SSH_KEY_FILE')]) {
                     script {
@@ -100,41 +100,40 @@ pipeline {
         }
     }
 
-    post {
-        success {
-            mail(
-                to: RECIPIENTS,
-                subject: "SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """
-                    <html>
-                        <body>
-                            <p>Hello Ghada,</p>
-                            <p>The build <strong>succeeded</strong>.</p>
-                            <p>Check the details here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                        </body>
-                    </html>
-                """,
-                mimeType: 'text/html',
-                charset: 'UTF-8'
-            )
-        }
+   post {
+    success {
+        mail(
+            to: RECIPIENTS,
+            subject: "SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: """
+                <html>
+                    <body>
+                        <p>Hello Ghada,</p>
+                        <p>The build <strong>succeeded</strong>.</p>
+                        <p>Check the details here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    </body>
+                </html>
+            """,
+            mimeType: 'text/html',
+            charset: 'UTF-8'
+        )
+    }
 
-        failure {
-            mail(
-                to: RECIPIENTS,
-                subject: "FAILURE - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                body: """
-                    <html>
-                        <body>
-                            <p>Hello Ghada,</p>
-                            <p>The build <strong>failed</strong>.</p>
-                            <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
-                        </body>
-                    </html>
-                """,
-                mimeType: 'text/html',
-                charset: 'UTF-8'
-            )
-        }
+    failure {
+        mail(
+            to: RECIPIENTS,
+            subject: "FAILURE - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: """
+                <html>
+                    <body>
+                        <p>Hello Ghada,</p>
+                        <p>The build <strong>failed</strong>.</p>
+                        <p>Check the logs here: <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    </body>
+                </html>
+            """,
+            mimeType: 'text/html',
+            charset: 'UTF-8'
+        )
     }
 }
