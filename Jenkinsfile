@@ -86,7 +86,6 @@ pipeline {
                     script {
                         bat 'icacls %SSH_KEY_FILE% /inheritance:r'
                         bat 'icacls %SSH_KEY_FILE% /grant:r "test:F"'
-
                         bat '''
                             ssh -i %SSH_KEY_FILE% -o StrictHostKeyChecking=no ubuntu@3.84.219.170 ^
                             "cd ~/peplinesec && \
@@ -105,12 +104,12 @@ pipeline {
         success {
             mail(
                 to: RECIPIENTS,
-                subject: "✅ SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                subject: "SUCCESS - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """
                     <html>
                         <body>
-                            <p>Bonjour Ghada 👩‍💻,</p>
-                            <p>✅ Le build a <strong>réussi</strong>.</p>
+                            <p>Bonjour Ghada,</p>
+                            <p>Le build a <strong>réussi</strong>.</p>
                             <p>Consulte les détails ici : <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                         </body>
                     </html>
@@ -123,12 +122,12 @@ pipeline {
         failure {
             mail(
                 to: RECIPIENTS,
-                subject: "❌ ECHEC - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                subject: "ECHEC - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: """
                     <html>
                         <body>
-                            <p>Bonjour Ghada 👩‍💻,</p>
-                            <p>❌ Le build a <strong>échoué</strong> 💥 !</p>
+                            <p>Bonjour Ghada,</p>
+                            <p>Le build a <strong>échoué</strong>.</p>
                             <p>Vérifie les logs ici : <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                         </body>
                     </html>
