@@ -88,7 +88,7 @@ pipeline {
                         bat 'icacls %SSH_KEY_FILE% /grant:r "test:F"'
 
                         bat '''
-                        ssh -i %SSH_KEY_FILE% -o StrictHostKeyChecking=no ubuntu@44.204.48.250 ^
+                        ssh -i %SSH_KEY_FILE% -o StrictHostKeyChecking=no ubuntu@3.95.184.133 ^
                         "cd ~/peplinesec && \
                         docker-compose down && \
                         git pull && \
