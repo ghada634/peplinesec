@@ -88,7 +88,7 @@ pipeline {
                         bat 'icacls %SSH_KEY_FILE% /grant:r "test:F"'
 
                         bat '''
-                        ssh -i %SSH_KEY_FILE% -o StrictHostKeyChecking=no ubuntu@3.84.219.170 ^
+                        ssh -i %SSH_KEY_FILE% -o StrictHostKeyChecking=no ubuntu@44.204.48.250 ^
                         "cd ~/peplinesec && \
                         docker-compose down && \
                         git pull && \
@@ -115,7 +115,7 @@ pipeline {
         failure {
             mail(
                 to: RECIPIENTS,
-                subject: "❌ FAILURE - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                subject: " FAILURE - ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                 body: "Hello Ghada ,\n\nThe build failed !\n\nCheck the logs here: ${env.BUILD_URL}",
                 mimeType: 'text/plain',
                 charset: 'UTF-8'
