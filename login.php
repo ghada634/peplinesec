@@ -102,7 +102,8 @@
                     </tr>
                     <tr>
                         <td>
-                            <input type="submit" value="Login" class="login-btn btn-primary btn">
+                            <input type="submit" value="Sign In" class="login-btn btn-primary btn">
+
                         </td>
                     </tr>
                     <tr>
