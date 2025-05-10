@@ -118,7 +118,12 @@
         </div>
     </center>
 
-
+    <script>
+        function togglePassword() {
+            var pwField = document.getElementById("userpassword");
+            pwField.type = (pwField.type === "password") ? "text" : "password";
+        }
+    </script>
 </body>
 
 </html>
